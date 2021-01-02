@@ -2,7 +2,7 @@
 
 use super::{Key, VChild, VComp, VDiff, VList, VTag, VText};
 use crate::{
-    backend::DomBackend,
+    backend::{DomBackend, Node, Element},
     html::{AnyScope, Component, NodeRef},
 };
 use cfg_if::cfg_if;

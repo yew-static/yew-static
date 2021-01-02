@@ -1,9 +1,15 @@
 //! This module contains the implementation of a virtual element node `VTag`.
 
 use super::{
-    Attributes, Key, Listener, Listeners, Patch, PositionalAttr, Transformer, VDiff, VList, VNode,
+    Attributes, Key, Patch, PositionalAttr, Transformer, VDiff, VList, VNode,
 };
-use crate::html::{AnyScope, NodeRef};
+
+use super::listener::{Listener, Listeners};
+
+use crate::{
+    html::{AnyScope, NodeRef, listener::EventListener},
+    backend::{Element}
+};
 use log::warn;
 use std::borrow::Cow;
 use std::cmp::PartialEq;

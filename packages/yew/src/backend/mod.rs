@@ -4,11 +4,12 @@
 //!     - web_sys
 //!     - static_render
 
+use cfg_if::cfg_if;
 use crate::NodeRef;
 
 pub trait DomBackend {
-    type Element: DomElement;
-    type Node: DomNode;
+    type Element;
+    type Node;
     type Document;
     type Window;
     type InputEvent;
@@ -41,5 +42,9 @@ pub trait DomBackend {
     fn onchange_handler(this: &Self::Element) -> Self::ChangeData;
 }
 
-pub(crate) trait DomElement {}
-pub(crate) trait DomNode {}
+cfg_if! {
+    if #[cfg(feature = "web_sys")] {
+        mod web_sys;
+        pub use self::web_sys::{Renderer, Element, Node};
+    }
+}

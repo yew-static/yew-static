@@ -13,6 +13,7 @@ pub use yew_macro::Properties;
 
 use crate::callback::Callback;
 use crate::virtual_dom::{VChild, VNode};
+use crate::backend::Node;
 use cfg_if::cfg_if;
 use cfg_match::cfg_match;
 use std::cell::RefCell;
@@ -415,9 +416,11 @@ impl NodeRef {
 
     pub fn cast<INTO: std::convert::TryFrom<Node>>(&self) -> Option<INTO> {
         let node = self.get();
-        cast_node_ref::<INTO>(self)
+        todo!();
+        // cast_node_ref::<INTO>(self)
         // Renderer::cast_node_ref::<INTO>(self)
         // Renderer::cast_node_ref(self)
+        None
     }
 
     /// Wrap an existing `Node` in a `NodeRef`

@@ -15,6 +15,18 @@ cfg_if! {
         use stdweb::web::event::InputEvent;
 
         pub use listener_stdweb::*;
+
+        /// Handler to an event listener, only use is to cancel the event.
+        #[derive(Debug)]
+        pub struct EventListener(Option<EventListenerHandle>);
+
+        impl Drop for EventListener {
+            fn drop(&mut self) {
+                if let Some(event) = self.0.take() {
+                    event.remove()
+                }
+            }
+        }
     } else if #[cfg(feature = "web_sys")] {
         mod listener_web_sys;
 
@@ -26,6 +38,10 @@ cfg_if! {
         };
 
         pub use listener_web_sys::*;
+
+        pub use web_sys::EventListener;
+
+        // TODO: haven't implemented ability to drop an event listener like in stdweb
     } else if #[cfg(feature = "static_render")] {
         use crate::backend::{
             Element, FileList, InputElement, SelectElement,
@@ -147,20 +163,6 @@ fn onchange_handler(this: &Element) -> ChangeData {
                     panic!("only an InputElement, TextAreaElement or SelectElement can have an onchange event listener");
                 }
             }
-        }
-    }
-}
-
-/// Handler to an event listener, only use is to cancel the event.
-#[cfg(feature = "std_web")]
-#[derive(Debug)]
-pub struct EventListener(Option<EventListenerHandle>);
-
-#[cfg(feature = "std_web")]
-impl Drop for EventListener {
-    fn drop(&mut self) {
-        if let Some(event) = self.0.take() {
-            event.remove()
         }
     }
 }

@@ -1,6 +1,7 @@
 //! This module contains fragments implementation.
 use super::{Key, VDiff, VNode, VText};
 use crate::html::{AnyScope, NodeRef};
+use crate::backend::{Element};
 use std::collections::{HashMap, HashSet};
 use std::ops::{Deref, DerefMut};
 

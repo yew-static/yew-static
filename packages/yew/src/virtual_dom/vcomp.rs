@@ -8,9 +8,11 @@ use std::fmt;
 use std::ops::Deref;
 
 use super::Element;
+use crate::backend::{DomBackend, Renderer, Node};
 use mountable::{Mountable, PropsWrapper};
 pub use vchild::VChild;
 pub use vcomp::VComp;
+
 mod vcomp {
     use super::*;
     /// A virtual component.
@@ -97,7 +99,7 @@ mod vcomp {
                 ancestor.detach(parent);
             }
 
-            let placeholder: Node = get_document().create_text_node("").into();
+            let placeholder: Node = Renderer::get_document().create_text_node("").into();
             super::super::insert_node(&placeholder, parent, next_sibling.get());
             self.node_ref.set(Some(placeholder));
             let scope = mountable.mount(

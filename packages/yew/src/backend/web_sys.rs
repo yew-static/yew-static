@@ -1,3 +1,8 @@
+use anyhow::anyhow;
+use web_sys::{Document, Window};
+pub use web_sys::{Element, Node};
+use crate::backend::DomBackend;
+
 pub struct Renderer {}
 
 impl DomBackend for Renderer {
@@ -28,6 +33,7 @@ impl DomBackend for Renderer {
     }
 
     fn get_origin() -> Result<String, anyhow::Error> {
+        let location = Self::get_window().location();
         let origin = location.origin().map_err(|e| {
             anyhow!(e
                 .as_string()
@@ -37,6 +43,7 @@ impl DomBackend for Renderer {
     }
 
     fn get_host() -> Result<String, anyhow::Error> {
+        let location = Self::get_window().location();
         let host = location.host().map_err(|e| {
             anyhow!(e
                 .as_string()

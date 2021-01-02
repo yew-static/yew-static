@@ -1,5 +1,5 @@
 use super::{Callback, Component, NodeRef};
-use crate::backend::DomBackend;
+use crate::backend::{Element};
 use crate::scheduler::{scheduler, ComponentRunnableType, Runnable, Shared};
 use crate::virtual_dom::{VDiff, VNode};
 use cfg_if::cfg_if;
@@ -108,7 +108,7 @@ mod scoped {
         /// Schedules a task to destroy a component
         fn destroy(&mut self) {
             let state = self.state.clone();
-            let destroy = DestroyComponent { state };
+            let destroy = super::messaging::DestroyComponent { state };
             scheduler().push_comp(ComponentRunnableType::Destroy, Box::new(destroy));
         }
     }
@@ -170,7 +170,7 @@ mod scoped {
             let lock = scheduler.lock();
             scheduler.push_comp(
                 ComponentRunnableType::Create,
-                Box::new(CreateComponent {
+                Box::new(messaging::CreateComponent {
                     state: self.state.clone(),
                     parent,
                     next_sibling,
@@ -188,7 +188,7 @@ mod scoped {
 
         /// Schedules a task to send an update to a component
         pub(crate) fn update(&self, update: ComponentUpdate<COMP>) {
-            let update = UpdateComponent {
+            let update = messaging::UpdateComponent {
                 state: self.state.clone(),
                 update,
             };

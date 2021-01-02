@@ -17,7 +17,9 @@ pub mod vtext;
 mod transform;
 pub use transform::Transformer;
 
-// pub use classes::Classes;
+mod classes;
+
+pub use classes::Classes;
 
 use crate::html::{AnyScope, NodeRef};
 use indexmap::{IndexMap, IndexSet};
@@ -66,10 +68,11 @@ mod listener {
             write!(f, "Listener {{ kind: {} }}", self.kind())
         }
     }
+
+    /// A list of event listeners.
+    pub type Listeners = Vec<Rc<dyn Listener>>;
 }
 
-// /// A list of event listeners.
-// type Listeners = Vec<Rc<dyn Listener>>;
 
 mod positional_attributes {
     use super::*;
