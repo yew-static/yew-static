@@ -4,6 +4,8 @@ use web_sys::{
     Window,
     Element,
     Node,
+    EventListener,
+    InputEvent,
     HtmlInputElement as InputElement, 
     HtmlButtonElement as ButtonElement,
     HtmlTextAreaElement as TextAreaElement,
@@ -13,11 +15,24 @@ use crate::backend::DomBackend;
 
 pub struct Renderer {}
 
+/// A type representing data from `oninput` event.
+#[derive(Debug)]
+pub struct InputData {
+    /// Inserted characters. Contains value from
+    /// [InputEvent](https://developer.mozilla.org/en-US/docs/Web/API/InputEvent/data).
+    pub value: String,
+    /// The InputEvent received.
+    pub event: InputEvent,
+}
+
 impl DomBackend for Renderer {
     type Element = Element;
     type Node = Node;
     type Document = Document;
     type Window = Window;
+    type EventListener = EventListener;
+    type InputEvent = InputEvent;
+    type InputData = InputData;
 
     type InputElement = InputElement;
     type ButtonElement = ButtonElement;
@@ -32,7 +47,7 @@ impl DomBackend for Renderer {
         todo!()
     }
 
-    fn element_remove_child(element: &Self::Element, child: &Self::Element) -> Option<()> {
+    fn element_remove_child(element: &Self::Element, child: &Self::Element) -> Result<Self::Node, ()> {
         todo!()
     }
 

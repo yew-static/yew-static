@@ -278,7 +278,8 @@ pub use web_sys;
 pub mod events {
     use cfg_if::cfg_if;
 
-    pub use crate::html::{ChangeData, InputData};
+    pub use crate::backend::InputData;
+    pub use crate::html::ChangeData;
 
     cfg_if! {
         if #[cfg(feature = "std_web")] {

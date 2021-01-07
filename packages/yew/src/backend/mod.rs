@@ -57,9 +57,12 @@ cfg_if! {
 
 // Re-export types from the specific renderer backend
 
+pub type EventListener = <Renderer as DomBackend>::EventListener;
 pub type Element = <Renderer as DomBackend>::Element;
 pub type Node = <Renderer as DomBackend>::Node;
 pub type TextNode = <Renderer as DomBackend>::TextNode;
+pub type InputData = <Renderer as DomBackend>::InputData;
 pub type InputElement = <Renderer as DomBackend>::InputElement;
+pub type InputEvent = <Renderer as DomBackend>::InputEvent;
 pub type ButtonElement = <Renderer as DomBackend>::ButtonElement;
 pub type TextAreaElement = <Renderer as DomBackend>::TextAreaElement;

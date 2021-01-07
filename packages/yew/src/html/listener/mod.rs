@@ -1,6 +1,8 @@
 #[macro_use]
 mod macros;
 
+use crate::backend::InputData;
+
 use cfg_if::cfg_if;
 use cfg_match::cfg_match;
 
@@ -48,16 +50,6 @@ cfg_if! {
             TextAreaElement, InputEvent
         };
     }
-}
-
-/// A type representing data from `oninput` event.
-#[derive(Debug)]
-pub struct InputData {
-    /// Inserted characters. Contains value from
-    /// [InputEvent](https://developer.mozilla.org/en-US/docs/Web/API/InputEvent/data).
-    pub value: String,
-    /// The InputEvent received.
-    pub event: InputEvent,
 }
 
 // There is no '.../Web/API/ChangeEvent/data' (for onchange) similar to

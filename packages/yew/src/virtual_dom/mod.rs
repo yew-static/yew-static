@@ -22,6 +22,7 @@ mod classes;
 pub use classes::Classes;
 
 use crate::html::{AnyScope, NodeRef};
+use crate::backend::{Element, EventListener};
 use indexmap::{IndexMap, IndexSet};
 use std::{
     borrow::{Borrow, Cow},
@@ -46,10 +47,6 @@ pub use self::{
 use attributes::Attributes;
 use positional_attributes::PositionalAttr;
 use vdiff::{Patch, VDiff};
-
-#[derive(Debug)]
-pub struct Element {}
-pub struct EventListener {}
 
 mod listener {
     use super::*;
