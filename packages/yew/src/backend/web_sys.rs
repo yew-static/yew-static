@@ -1,4 +1,5 @@
 use anyhow::anyhow;
+use wasm_bindgen::JsCast;
 use web_sys::{
     Document,
     Window,
@@ -13,7 +14,7 @@ use web_sys::{
     Text as TextNode,
     FileList
 };
-use crate::backend::DomBackend;
+use crate::backend::{DomBackend, base_onchange_handler};
 
 pub struct Renderer {}
 
@@ -76,6 +77,22 @@ impl DomBackend for Renderer {
 
     fn cast_node_ref<INTO>(node_ref: &crate::NodeRef) -> Option<INTO> {
         todo!()
+    }
+
+    fn oninput_handler(this: &Self::Element, event: Self::InputEvent) -> Self::InputData {
+        let (v1, v2) = (
+            this.dyn_ref().map(|input: &InputElement| input.value()),
+            this.dyn_ref().map(|input: &TextAreaElement| input.value()),
+        );
+
+        let v3 = this.text_content();
+        let value = v1.or(v2).or(v3)
+            .expect("only an InputElement or TextAreaElement or an element with contenteditable=true can have an oninput event listener");
+        InputData { value, event }
+    }
+
+    fn onchange_handler(this: &Self::Element) -> Self::ChangeData {
+        base_onchange_handler(this)
     }
 
     fn get_document() -> Self::Document {

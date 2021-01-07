@@ -5,6 +5,8 @@
 //!     - static_render
 
 use cfg_if::cfg_if;
+use cfg_match::cfg_match;
+use wasm_bindgen::JsCast;
 use crate::NodeRef;
 
 pub trait DomBackend {
@@ -48,10 +50,9 @@ pub trait DomBackend {
 
 cfg_if! {
     if #[cfg(feature = "web_sys")] {
+        use ::web_sys::{FileList, HtmlSelectElement as SelectElement};
         mod web_sys;
-        pub use self::web_sys::{
-            Renderer,
-        };
+        pub use self::web_sys::{ Renderer };
     }
 }
 
@@ -67,3 +68,47 @@ pub type InputElement = <Renderer as DomBackend>::InputElement;
 pub type InputEvent = <Renderer as DomBackend>::InputEvent;
 pub type ButtonElement = <Renderer as DomBackend>::ButtonElement;
 pub type TextAreaElement = <Renderer as DomBackend>::TextAreaElement;
+
+fn base_onchange_handler(this: &Element) -> ChangeData {
+    match this.node_name().as_ref() {
+        "INPUT" => {
+            let input = cfg_match! {
+                feature = "std_web" => InputElement::try_from(this.clone()).unwrap(),
+                feature = "web_sys" => this.dyn_ref::<InputElement>().unwrap(),
+            };
+            let is_file = input
+                .get_attribute("type")
+                .map(|value| value.eq_ignore_ascii_case("file"))
+                .unwrap_or(false);
+            if is_file {
+                let files: FileList = cfg_match! {
+                    feature = "std_web" => js!( return @{input}.files; ).try_into().unwrap(),
+                    feature = "web_sys" => input.files().unwrap(),
+                };
+                ChangeData::Files(files)
+            } else {
+                cfg_match! {
+                    feature = "std_web" => ChangeData::Value(input.raw_value()),
+                    feature = "web_sys" => ChangeData::Value(input.value()),
+                }
+            }
+        }
+        "TEXTAREA" => {
+            let tae = cfg_match! {
+                feature = "std_web" => TextAreaElement::try_from(this.clone()).unwrap(),
+                feature = "web_sys" => this.dyn_ref::<TextAreaElement>().unwrap(),
+            };
+            ChangeData::Value(tae.value())
+        }
+        "SELECT" => {
+            let se = cfg_match! {
+                feature = "std_web" => SelectElement::try_from(this.clone()).unwrap(),
+                feature = "web_sys" => this.dyn_ref::<SelectElement>().unwrap().clone(),
+            };
+            ChangeData::Select(se)
+        }
+        _ => {
+            panic!("only an InputElement, TextAreaElement or SelectElement can have an onchange event listener");
+        }
+    }
+}
