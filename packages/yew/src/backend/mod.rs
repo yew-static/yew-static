@@ -8,18 +8,18 @@ use cfg_if::cfg_if;
 use crate::NodeRef;
 
 pub trait DomBackend {
-    type Element;
     type ButtonElement;
-    type InputElement;
-    type TextAreaElement;
-    type Node;
-    type TextNode;
-    type Document;
-    type Window;
-    type InputEvent;
-    type InputData;
     type ChangeData;
+    type Document;
+    type Element;
     type EventListener;
+    type InputData;
+    type InputElement;
+    type InputEvent;
+    type Node;
+    type TextAreaElement;
+    type TextNode;
+    type Window;
 
     /// Returns the current window. This function will panic if there is no available window.
     fn get_window() -> Self::Window;
@@ -57,6 +57,7 @@ cfg_if! {
 
 // Re-export types from the specific renderer backend
 
+pub type ChangeData = <Renderer as DomBackend>::ChangeData;
 pub type EventListener = <Renderer as DomBackend>::EventListener;
 pub type Element = <Renderer as DomBackend>::Element;
 pub type Node = <Renderer as DomBackend>::Node;
