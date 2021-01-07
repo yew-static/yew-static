@@ -1,6 +1,14 @@
 use anyhow::anyhow;
-use web_sys::{Document, Window};
-pub use web_sys::{Element, Node};
+use web_sys::{
+    Document,
+    Window,
+    Element,
+    Node,
+    HtmlInputElement as InputElement, 
+    HtmlButtonElement as ButtonElement,
+    HtmlTextAreaElement as TextAreaElement,
+    Text as TextNode
+};
 use crate::backend::DomBackend;
 
 pub struct Renderer {}
@@ -10,6 +18,11 @@ impl DomBackend for Renderer {
     type Node = Node;
     type Document = Document;
     type Window = Window;
+
+    type InputElement = InputElement;
+    type ButtonElement = ButtonElement;
+    type TextAreaElement = TextAreaElement;
+    type TextNode = TextNode;
 
     fn element_as_node(element: &Self::Element) -> Self::Node {
         todo!()

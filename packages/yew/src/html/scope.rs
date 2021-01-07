@@ -1,7 +1,7 @@
 use super::{Callback, Component, NodeRef};
-use crate::backend::{Element};
+use crate::backend::{Renderer, Element};
 use crate::scheduler::{scheduler, ComponentRunnableType, Runnable, Shared};
-use crate::virtual_dom::{VDiff, VNode};
+use crate::virtual_dom::{vdiff::VDiff, VNode};
 use cfg_if::cfg_if;
 use std::any::{Any, TypeId};
 use std::cell::{Ref, RefCell};
@@ -353,7 +353,7 @@ mod messaging {
         next_sibling: NodeRef,
         node_ref: NodeRef,
         scope: Scope<COMP>,
-        component: Box<COMP>,
+        pub(crate) component: Box<COMP>,
         placeholder: Option<VNode>,
         last_root: Option<VNode>,
         new_root: Option<VNode>,

@@ -332,7 +332,7 @@ mod attributes {
     }
 }
 
-mod vdiff {
+pub mod vdiff {
     use super::*;
 
     /// Patch for DOM node modification.

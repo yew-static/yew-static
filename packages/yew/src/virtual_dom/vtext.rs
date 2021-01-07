@@ -2,6 +2,7 @@
 
 use super::{VDiff, VNode};
 use crate::html::{AnyScope, NodeRef};
+use crate::backend::{Element, Renderer, TextNode};
 use cfg_if::cfg_if;
 use log::warn;
 use std::borrow::Cow;
@@ -65,9 +66,9 @@ impl VDiff for VText {
             ancestor.detach(parent);
         }
 
-        let text_node = get_document().create_text_node(&self.text);
+        let text_node = Renderer::get_document().create_text_node(&self.text);
         super::insert_node(&text_node, parent, next_sibling.get());
-        let text_node = get_document().create_text_node(&self.text);
+        let text_node = Renderer::get_document().create_text_node(&self.text);
         super::insert_node((&text_node).into(), parent, next_sibling.get());
         self.reference = Some(text_node.clone());
         NodeRef::new(text_node.into())

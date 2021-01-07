@@ -3,19 +3,19 @@
 use super::{
     Attributes, Key, Patch, PositionalAttr, Transformer, VDiff, VList, VNode,
 };
-
 use super::listener::{Listener, Listeners};
 
 use crate::{
-    html::{AnyScope, NodeRef, listener::EventListener},
-    backend::{Element}
+    html::{AnyScope, NodeRef, EventListener},
+    backend::{Element, Renderer, InputElement, ButtonElement, TextAreaElement}
 };
+use cfg_if::cfg_if;
 use log::warn;
 use std::borrow::Cow;
 use std::cmp::PartialEq;
 use std::rc::Rc;
-
 use std::ops::Deref;
+use wasm_bindgen::JsCast;
 
 /// SVG namespace string used for creating svg elements
 pub const SVG_NAMESPACE: &str = "http://www.w3.org/2000/svg";
@@ -327,20 +327,20 @@ impl VTag {
 
         // TODO: add std_web after https://github.com/koute/stdweb/issues/395 will be approved
         // Check this out: https://github.com/yewstack/yew/pull/1033/commits/4b4e958bb1ccac0524eb20f63f06ae394c20553d
-        // #[cfg(feature = "web_sys")]
-        // {
-        if self.element_type == ElementType::Button {
-            if let Some(button) = element.dyn_ref::<ButtonElement>() {
-                if let Some(change) = self.diff_kind(ancestor) {
-                    let kind = match change {
-                        Patch::Add(kind, _) | Patch::Replace(kind, _) => kind,
-                        Patch::Remove(_) => "",
-                    };
-                    button.set_type(kind);
+        #[cfg(feature = "web_sys")]
+        {
+            if self.element_type == ElementType::Button {
+                if let Some(button) = element.dyn_ref::<ButtonElement>() {
+                    if let Some(change) = self.diff_kind(ancestor) {
+                        let kind = match change {
+                            Patch::Add(kind, _) | Patch::Replace(kind, _) => kind,
+                            Patch::Remove(_) => "",
+                        };
+                        button.set_type(kind);
+                    }
                 }
             }
         }
-        // }
 
         // `input` element has extra parameters to control
         // I override behavior of attributes to make it more clear
@@ -414,11 +414,11 @@ impl VTag {
         {
             let namespace = Some(SVG_NAMESPACE);
 
-            get_document()
+            Renderer::get_document()
                 .create_element_ns(namespace, tag)
                 .expect("can't create namespaced element for vtag")
         } else {
-            get_document()
+            Renderer::get_document()
                 .create_element(tag)
                 .expect("can't create element for vtag")
         }

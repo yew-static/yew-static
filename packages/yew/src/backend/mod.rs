@@ -9,7 +9,11 @@ use crate::NodeRef;
 
 pub trait DomBackend {
     type Element;
+    type ButtonElement;
+    type InputElement;
+    type TextAreaElement;
     type Node;
+    type TextNode;
     type Document;
     type Window;
     type InputEvent;
@@ -45,6 +49,17 @@ pub trait DomBackend {
 cfg_if! {
     if #[cfg(feature = "web_sys")] {
         mod web_sys;
-        pub use self::web_sys::{Renderer, Element, Node};
+        pub use self::web_sys::{
+            Renderer,
+        };
     }
 }
+
+// Re-export types from the specific renderer backend
+
+pub type Element = <Renderer as DomBackend>::Element;
+pub type Node = <Renderer as DomBackend>::Node;
+pub type TextNode = <Renderer as DomBackend>::TextNode;
+pub type InputElement = <Renderer as DomBackend>::InputElement;
+pub type ButtonElement = <Renderer as DomBackend>::ButtonElement;
+pub type TextAreaElement = <Renderer as DomBackend>::TextAreaElement;
