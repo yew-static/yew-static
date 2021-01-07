@@ -139,8 +139,8 @@ mod vchild {
         /// The component properties
         pub props: COMP::Properties,
         /// Reference to the mounted node
-        node_ref: NodeRef,
-        key: Option<Key>,
+        pub(crate) node_ref: NodeRef,
+        pub(crate) key: Option<Key>,
     }
 
     impl<COMP: Component> Clone for VChild<COMP> {

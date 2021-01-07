@@ -115,8 +115,8 @@ mod scoped {
 
     /// A context which allows sending messages to a component.
     pub struct Scope<COMP: Component> {
-        parent: Option<Rc<AnyScope>>,
-        state: Shared<Option<ComponentState<COMP>>>,
+        pub(crate) parent: Option<Rc<AnyScope>>,
+        pub(crate) state: Shared<Option<ComponentState<COMP>>>,
     }
 
     impl<COMP: Component> fmt::Debug for Scope<COMP> {
@@ -354,8 +354,8 @@ mod messaging {
         node_ref: NodeRef,
         scope: Scope<COMP>,
         pub(crate) component: Box<COMP>,
-        placeholder: Option<VNode>,
-        last_root: Option<VNode>,
+        pub(crate) placeholder: Option<VNode>,
+        pub(crate) last_root: Option<VNode>,
         new_root: Option<VNode>,
         has_rendered: bool,
         pending_updates: Vec<Box<UpdateComponent<COMP>>>,

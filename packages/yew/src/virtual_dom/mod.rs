@@ -86,12 +86,12 @@ mod positional_attributes {
             Self(key, None)
         }
 
-        fn transpose(self) -> Option<(&'static str, Cow<'static, str>)> {
+        pub(crate) fn transpose(self) -> Option<(&'static str, Cow<'static, str>)> {
             let Self(key, value) = self;
             value.map(|v| (key, v))
         }
 
-        fn transposed<'a>(&'a self) -> Option<(&'static str, &'a Cow<'static, str>)> {
+        pub(crate) fn transposed<'a>(&'a self) -> Option<(&'static str, &'a Cow<'static, str>)> {
             let Self(key, value) = self;
             value.as_ref().map(|v| (*key, v))
         }
